@@ -33,7 +33,7 @@ This tool was created for researchers who need a fast, private, and flexible way
 
 No installation is needed!
 
-1.  **Download:** Download the `chrom_analyzer_web.html` file from this repository.
+1.  **Download:** Download the `chrom_analyzer_web.html` file from this repository or visit "https://anindya-karmaker.github.io/Chromatogram-Plotter-Analyzer/"
 2.  **Open:** Open the file in any modern web browser (like Chrome, Firefox, or Edge).
 
 ---
