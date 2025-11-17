@@ -465,9 +465,6 @@
                     <button onclick="copyToClipboard()" id="copyBtn" disabled class="button-secondary">
                         📋 Copy to Clipboard
                     </button>
-                    <button onclick="exportData()" id="exportBtn" disabled class="button-secondary">
-                        📤 Export Data (CSV)
-                    </button>
                 </div>
             </div>
         </div>
@@ -771,7 +768,6 @@
             document.getElementById('integEndValue').disabled = false;
             document.getElementById('saveBtn').disabled = false;
             document.getElementById('copyBtn').disabled = false;
-            document.getElementById('exportBtn').disabled = false;
             document.getElementById('calcBtn').disabled = false;
             document.getElementById('fractionBtn').disabled = false;
             document.getElementById('showFractionsCheck').disabled = false;
@@ -1104,23 +1100,6 @@
                 });
         }
 
-        function exportData() {
-            if (Object.keys(rawData).length === 0) return;
-            
-            let csv = 'Variable,Volume (mL),Value\n';
-            Object.keys(rawData).forEach(function(varName) {
-                const data = rawData[varName];
-                data.x.forEach((x, i) => { csv += `${varName},${x},${data.y[i]}\n`; });
-            });
-            
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.download = currentFileName.replace(/\.[^/.]+$/, '') + '_data.csv';
-            link.href = url;
-            link.click();
-            URL.revokeObjectURL(url);
-        }
 
         function openCustomImport() { document.getElementById('customImportModal').style.display = 'block'; }
         document.getElementById('customFileInput').addEventListener('change', function() {
