@@ -540,8 +540,9 @@
             </div>
             
             <div class="form-group">
-                <label>Path Length (cm):</label>
-                <input type="number" id="pathLengthInput" value="1.0" step="0.1" oninput="calculateConcentration()">
+                <label for="pathLengthInput">Path Length (cm):</label>
+                <input type="number" id="pathLengthInput" value="0.2" step="0.1" oninput="calculateConcentration()">
+                <small class="form-text text-muted">Hint: Default for ÄKTA U9-L flow cell is 2 mm (0.2 cm).</small>
             </div>
             
             <div class="form-group">
