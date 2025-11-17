@@ -26,7 +26,6 @@ This tool was created for researchers who need a fast, private, and flexible way
 -   **Exporting Options:**
     -   **Save as PNG:** Export the customized plot as a high-resolution image.
     -   **Copy to Clipboard:** Instantly copy the plot for pasting into presentations or lab notebooks.
-    -   **Export Data (CSV):** Export the processed data for use in other software like Prism or Excel.
 -   **100% Client-Side:** Your data is processed locally in your browser. Nothing is ever uploaded to a server, ensuring complete data privacy.
 
 ## ⚙️ How to Use
