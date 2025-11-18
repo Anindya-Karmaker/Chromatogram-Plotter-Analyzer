@@ -42,13 +42,19 @@
             margin-top: 20px;
         }
 
+        .main-grid > div:first-child {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
         .chart-container {
             background: white;
             border: 1px solid #ddd;
             border-radius: 4px;
             padding: 15px;
-            height: 600px;
             position: relative;
+            width: 100%;
         }
 
         .controls-panel {
@@ -76,7 +82,6 @@
         button {
             width: 100%;
             padding: 10px;
-            /* --- KEY CHANGE: Updated color scheme --- */
             background: #00796b; 
             color: white;
             border: none;
@@ -88,7 +93,6 @@
         }
 
         button:hover:not(:disabled) {
-            /* --- KEY CHANGE: Updated hover color --- */
             background: #004d40;
         }
 
@@ -200,11 +204,11 @@
         }
 
         .button-success {
-            background: #28a745;
+            background: #00796b; 
         }
 
         .button-success:hover:not(:disabled) {
-            background: #218838;
+            background: #004d40; 
         }
 
         .button-danger {
@@ -227,7 +231,6 @@
             border-radius: 4px;
         }
 
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -347,17 +350,26 @@
         
         @media (max-width: 900px) {
             .main-grid {
-                grid-template-columns: 1fr; /* Stack chart and controls vertically */
+                grid-template-columns: 1fr; 
             }
+
+            .main-grid > div:first-child {
+                overflow-x: auto; 
+            }
+
             .chart-container {
-                height: 450px; /* Adjust chart height for smaller screens */
+                min-width: 1000px;  
+                min-height: 400px;     
+            }
+            .status-bar {
+                 min-width: 1000px; 
+                 margin-bottom: 15px; 
             }
         }
         
-        /* --- START: New Footer CSS --- */
         footer {
             text-align: center;
-            color: #6c757d; /* a muted gray */
+            color: #6c757d; 
             margin-top: 40px;
             padding-top: 20px;
             font-size: 0.85rem;
@@ -367,13 +379,12 @@
             margin-bottom: 0.5rem;
         }
         footer a {
-            color: #00796b; /* use the primary color */
+            color: #00796b; 
             text-decoration: none;
         }
         footer a:hover {
             text-decoration: underline;
         }
-        /* --- END: New Footer CSS --- */
 
     </style>
 </head>
@@ -923,6 +934,7 @@
         }
 
         function processAktaFile(data) {
+            resetState(); 
             try {
                 if (data.length < 3) {
                     updateStatus('Error: File has too few rows');
@@ -931,7 +943,6 @@
                 const headers = data[1] || [];
                 const dataRows = data.slice(2);
                 
-                originalRawData = {}; 
                 const columnMap = [
                     { pattern: 'UV', name: 'UV' }, { pattern: 'ph', name: 'pH', caseSensitive: false },
                     { pattern: 'Cond', name: 'Conductivity' }, { pattern: 'Conc', name: 'Gradient' },
@@ -944,7 +955,6 @@
                     
                     if (idx >= 0) {
                         if (mapping.name === 'Fraction') {
-                            fractionData = [];
                             dataRows.forEach(row => {
                                 const pos = parseFloat(row[idx]);
                                 if (!isNaN(pos) && row[idx + 1]) fractionData.push({ position: pos, label: row[idx + 1], show: true });
@@ -970,7 +980,7 @@
                     return;
                 }
                 
-                rawData = JSON.parse(JSON.stringify(originalRawData)); 
+                rawData = JSON.parse(JSON.stringify(originalRawData));
                 onDataImported();
                 
             } catch (error) {
@@ -980,10 +990,11 @@
 
         function importCustomData() {
             if (!customParsedData) return;
+            resetState(); 
+
             const headerRow = parseInt(document.getElementById('headerRowInput').value);
             const dataRows = customParsedData.slice(headerRow + 1);
             
-            originalRawData = {}; 
             const variables = ['UV', 'pH', 'Conductivity', 'Gradient', 'Flow rate', 'System Pressure'];
             
             variables.forEach(varName => {
@@ -1011,7 +1022,7 @@
             currentFileName = document.getElementById('customFileInput').files[0].name;
             closeModal('customImportModal');
             
-            rawData = JSON.parse(JSON.stringify(originalRawData)); 
+            rawData = JSON.parse(JSON.stringify(originalRawData));
             onDataImported();
         }
 
@@ -1379,7 +1390,7 @@
                 const data = rawData[varName];
                 traces.push({
                     x: data.x, 
-                    y: data.y, 
+                    y: data.y,
                     name: plotLabels[varName] || varName, type: 'scatter', mode: 'lines',
                     line: { color: plotColors[varName], dash: dashStyles[plotStyles[varName]], width: 2 },
                     yaxis: idx === 0 ? 'y' : 'y' + (idx + 1)
@@ -1389,99 +1400,51 @@
             if (document.getElementById('showIntegrationLinesCheck').checked) {
                 const startVal = parseFloat(document.getElementById('integStartValue').value);
                 const endVal = parseFloat(document.getElementById('integEndValue').value);
-                
-                if (!isNaN(startVal)) {
-                    shapes.push({
-                        type: 'line', xref: 'x', yref: 'paper', x0: startVal, y0: 0, x1: startVal, y1: 1,
-                        line: { color: 'red', width: 2, dash: 'solid' }
-                    });
-                }
-                
-                if (!isNaN(endVal)) {
-                    shapes.push({
-                        type: 'line', xref: 'x', yref: 'paper', x0: endVal, y0: 0, x1: endVal, y1: 1,
-                        line: { color: 'red', width: 2, dash: 'solid' }
-                    });
-                }
+                if (!isNaN(startVal)) shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: startVal, y0: 0, x1: startVal, y1: 1, line: { color: 'red', width: 2, dash: 'solid' } });
+                if (!isNaN(endVal)) shapes.push({ type: 'line', xref: 'x', yref: 'paper', x0: endVal, y0: 0, x1: endVal, y1: 1, line: { color: 'red', width: 2, dash: 'solid' } });
             }
             
             if (document.getElementById('showFractionsCheck').checked && fractionData.length > 0) {
                 fractionData.forEach(function(fraction) {
                     if (fraction.show) {
-                        traces.push({
-                            x: [fraction.position, fraction.position], y: [0, 1], yaxis: 'y', type: 'scatter', mode: 'lines',
-                            line: { color: 'gray', dash: 'dot', width: 1.5 },
-                            name: fraction.label, 
-                            showlegend: false, 
-                            hoverinfo: 'none'
-                        });
-                        annotations.push({
-                            x: fraction.position, y: 0, xref: 'x', yref: 'paper', text: fraction.label,
-                            showarrow: false, font: { size: fontSettings.fractionSize, color: '#444' },
-                            yanchor: 'top', yshift: -5, xanchor: 'center', textangle: -45
-                        });
+                        traces.push({ x: [fraction.position, fraction.position], y: [0, 1], yaxis: 'y', type: 'scatter', mode: 'lines', line: { color: 'gray', dash: 'dot', width: 1.5 }, name: fraction.label, showlegend: false, hoverinfo: 'none' });
+                        annotations.push({ x: fraction.position, y: 0, xref: 'x', yref: 'paper', text: fraction.label, showarrow: false, font: { size: fontSettings.fractionSize, color: '#444' }, yanchor: 'top', yshift: -5, xanchor: 'center', textangle: -45 });
                     }
                 });
             }
 
             if (document.getElementById('showRegionsCheck').checked && regionData.length > 0) {
                 regionData.forEach(region => {
-                    shapes.push({
-                        type: 'rect', xref: 'x', yref: 'paper', x0: region.start, y0: 0, x1: region.end, y1: 1,
-                        fillcolor: region.color, opacity: 0.2, line: { width: 0 }, layer: 'below'
-                    });
-                    annotations.push({
-                        x: (region.start + region.end) / 2, y: 1.05, xref: 'x', yref: 'paper',
-                        text: `<b>${region.label}</b>`, showarrow: false,
-                        font: { size: fontSettings.axisSize, color: 'black' }, xanchor: 'center'
-                    });
-                    traces.push({
-                        x: [null], y: [null], type: 'scatter', mode: 'markers', name: region.label,
-                        marker: { symbol: 'square', color: region.color, size: 15, line: { width: 1, color: '#666' } },
-                        showlegend: true
-                    });
+                    shapes.push({ type: 'rect', xref: 'x', yref: 'paper', x0: region.start, y0: 0, x1: region.end, y1: 1, fillcolor: region.color, opacity: 0.2, line: { width: 0 }, layer: 'below' });
+                    annotations.push({ x: (region.start + region.end) / 2, y: 1.05, xref: 'x', yref: 'paper', text: `<b>${region.label}</b>`, showarrow: false, font: { size: fontSettings.axisSize, color: 'black' }, xanchor: 'center' });
+                    traces.push({ x: [null], y: [null], type: 'scatter', mode: 'markers', name: region.label, marker: { symbol: 'square', color: region.color, size: 15, line: { width: 1, color: '#666' } }, showlegend: true });
                 });
             }
             
             const xAxisStart = parseFloat(document.getElementById('xAxisStart').value);
             const xAxisEnd = parseFloat(document.getElementById('xAxisEnd').value);
             let xAxisRange = null;
-            if (!isNaN(xAxisStart) && !isNaN(xAxisEnd) && xAxisStart < xAxisEnd) {
-                xAxisRange = [xAxisStart, xAxisEnd];
-            }
+            if (!isNaN(xAxisStart) && !isNaN(xAxisEnd) && xAxisStart < xAxisEnd) xAxisRange = [xAxisStart, xAxisEnd];
+
+            const container = document.querySelector('.chart-container');
+            const availableWidth = container.clientWidth - 30; 
+            const calculatedHeight = availableWidth * (9 / 16); 
 
             const layout = {
                 font: { family: fontSettings.family },
-                title: { 
-                    text: fontSettings.chartTitle,
-                    font: { size: fontSettings.titleSize }
-                },
-                margin: { t: 100, b: 150 },
-                legend: {
-                    orientation: 'h', yanchor: 'top', y: -0.25, xanchor: 'center', x: 0.5
-                },
-                xaxis: {
-                    title: 'Volume (mL)', domain: [0, plotDomainEnd], automargin: true,
-                    titlefont: { size: fontSettings.axisSize },
-                    tickfont: { size: fontSettings.axisSize },
-                    range: xAxisRange
-                },
+                title: { text: fontSettings.chartTitle, font: { size: fontSettings.titleSize } },
+                margin: { t: 100, b: 100, l: 60, r: 10 }, 
+                legend: { orientation: 'h', yanchor: 'top', y: -0.25, xanchor: 'center', x: 0.5 },
+                xaxis: { title: 'Volume (mL)', domain: [0, plotDomainEnd], automargin: true, titlefont: { size: fontSettings.axisSize }, tickfont: { size: fontSettings.axisSize }, range: xAxisRange },
                 annotations: annotations,
                 shapes: shapes,
-                height: 550,
+                height: calculatedHeight, 
                 hovermode: 'x unified'
             };
             
             selectedVariables.forEach(function(varName, idx) {
                 const axisId = idx === 0 ? 'yaxis' : 'yaxis' + (idx + 1);
-                layout[axisId] = {
-                    title: plotLabels[varName] || varName,
-                    titlefont: { color: plotColors[varName], size: fontSettings.axisSize },
-                    tickfont: { color: plotColors[varName], size: fontSettings.axisSize },
-                    automargin: true
-                };
-
-                
+                layout[axisId] = { title: plotLabels[varName] || varName, titlefont: { color: plotColors[varName], size: fontSettings.axisSize }, tickfont: { color: plotColors[varName], size: fontSettings.axisSize }, automargin: true };
                 if (idx > 0) {
                     layout[axisId].overlaying = 'y';
                     layout[axisId].side = 'right';
@@ -1498,7 +1461,6 @@
                 displayModeBar: true, 
                 displaylogo: false,
                 modeBarButtonsToRemove: ['select2d', 'lasso2d'],
-                modeBarButtonsToAdd: ['pan2d', 'zoom2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d'],
                 toImageButtonOptions: { format: 'png', filename: currentFileName.replace(/\.[^/.]+$/, '') + '_chromatogram', height: 800, width: 1200, scale: 2 }
             };
             
@@ -1650,6 +1612,32 @@
             }
             
             return { asymmetry, hetp };
+        }
+
+        function resetState() {
+            rawData = {};
+            originalRawData = {};
+            currentFileName = '';
+            plotColors = {};
+            plotStyles = {};
+            plotLabels = {};
+            fractionData = [];
+            regionData = []; 
+            integrationResults = { area: 0, volume: 0, start: 0, end: 0 };
+            
+            concentrationParams = { extCoeff: 1.0, pathLength: 0.2, mw: 1000 };
+            columnParams = { length_mm: 150 };
+            fontSettings.chartTitle = 'Chromatogram Analysis'; 
+
+            document.getElementById('colLength').value = 150;
+            document.getElementById('plotCheckboxes').innerHTML = '<p style="color: #999; font-size: 13px;">Load data to see variables</p>';
+            Plotly.purge('plotlyChart');
+            updateStatus('Ready to import data. Upload ÄKTA (TXT/TSV), CSV, or Excel file to begin.');
+
+            ['plotBtn', 'primaryVarSelect', 'integStartValue', 'integEndValue', 'saveBtn', 'copyBtn', 'fontBtn', 'calcBtn', 'fractionBtn', 'regionBtn', 'saveSessionBtn', 'showFractionsCheck', 'showRegionsCheck', 'showIntegrationLinesCheck', 'xAxisStart', 'xAxisEnd'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.disabled = true;
+            });
         }
 
         function saveImage(scale = 1) {
