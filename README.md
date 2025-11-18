@@ -13,67 +13,62 @@ This tool was created for researchers who need a fast, private, and flexible way
 -   **Direct ÄKTA Import:** Natively parses tab-delimited `.txt` or `.csv` files exported from GE Unicorn software (tested with v7.xx).
 -   **Custom Data Import:** A flexible wizard to import data from any generic CSV or Excel (`.xlsx`, `.xls`) file by mapping columns.
 -   **Interactive Multi-Axis Plotting:**
-    -   Visualize up to 6 different variables on a single plot, each with its own y-axis.
-    -   Full control over line color, line style (solid, dash, dot), and custom labels for each trace.
--   **Peak Integration & Analysis:**
-    -   Visually select an integration range using sliders.
-    -   Automatically calculates peak area (in mL·mAU) and volume.
--   **Protein Concentration Calculator:** Uses the integrated peak area and Beer-Lambert law parameters to estimate the total protein amount in milligrams.
+    -   Visualize multiple variables on a single plot, each with its own y-axis.
+    -   Full control over line color, style, and custom labels.
+-   **Advanced Peak Analysis:**
+    -   Visually select an integration range with draggable lines that can **snap to the nearest fraction**.
+    -   Automatically calculates **Peak Area**, **Volume**, **Asymmetry Factor (As)**, and **HETP**.
+    -   Calculations update in real-time as you adjust the integration range.
+-   **Protein Concentration Calculator:** Uses the integrated peak area and Beer-Lambert law parameters to estimate the total protein amount in milligrams. The result is displayed directly on the main panel.
 -   **Fraction Management:**
     -   Automatically imports fraction data from ÄKTA files.
     -   Manually add, edit, or remove fractions.
     -   Toggle fraction visibility on the plot, with labels displayed as annotations.
--   **Exporting Options:**
-    -   **Save as PNG:** Export the customized plot as a high-resolution image.
-    -   **Copy to Clipboard:** Instantly copy the plot for pasting into presentations or lab notebooks.
+-   **Publication-Ready Exporting:**
+    -   **High-Resolution PNG:** Save the plot as a PNG at **1x, 2x, or 3x resolution**.
+    -   **Full Font Customization:** A dedicated panel to control the font family and size of the title, axes, and annotations.
+    -   **Copy to Clipboard:** Instantly copy the plot *exactly as it appears on screen* for pasting into presentations or lab notebooks.
 -   **100% Client-Side:** Your data is processed locally in your browser. Nothing is ever uploaded to a server, ensuring complete data privacy.
 
 ## ⚙️ How to Use
 
 No installation is needed!
 
-1.  **Download:** Download the `chrom_analyzer_web.html` file from this repository or visit "https://anindya-karmaker.github.io/Chromatogram-Plotter-Analyzer/"
-2.  **Open:** Open the file in any modern web browser (like Chrome, Firefox, or Edge).
+1.  **Visit the Live Tool:** [https://anindya-karmaker.github.io/Chromatogram-Plotter-Analyzer/](https://anindya-karmaker.github.io/Chromatogram-Plotter-Analyzer/)
+2.  **Or Download:** Download the `index.html` file from this repository and open it in any modern web browser (like Chrome, Firefox, or Edge).
 
 ---
 
 ### Step-by-Step Workflow
 
 #### 1. Import Your Data
-
--   Use the **📁 Open ÄKTA File** button for standard Unicorn exports.
--   Use the **⚙️ Custom Import** button for any other CSV or Excel file. A preview will appear, allowing you to map your data columns (e.g., which column is volume, which is UV, etc.).
+Use the **📁 Open ÄKTA File** button for standard Unicorn exports, or the **⚙️ Custom Import** button for any other CSV or Excel file.
 
 #### 2. Customize the Plot
-
-The **📊 Plot Selection & Styling** panel gives you full control over the graph's appearance.
-
--   **Select variables** to display using the checkboxes.
--   **Change the label** that appears in the legend and on the axis.
--   **Pick a color** for each line.
--   **Choose a line style** (solid, dash, dot, etc.).
--   Click **📊 Update Plot** to apply your changes.
+Use the **📊 Plot Selection & Styling** panel to select variables and customize their appearance. Click **📊 Update Plot** to apply changes.
 
 ![Plotting Controls](https://github.com/user-attachments/assets/753c8e5c-9747-48e7-b373-7447c09fb753)
 
 #### 3. Analyze Peaks
-
--   In the **📐 Integration & Analysis** panel, select your primary variable for integration (usually `UV`).
--   Use the `Start` and `End` input fields to define the boundaries of your peak.
--   The `Area`, `Volume`, and `Range` are calculated and displayed automatically.
+-   **Enter Column Parameters:** Input your column's length in millimeters.
+-   **Integrate a Peak:** In the **📐 Integration & Analysis** panel, select your primary variable (usually `UV`) and use the `Start` and `End` fields to define the peak boundaries. The `Area`, `Volume`, `Asymmetry`, and `HETP` are calculated and displayed automatically.
+-   **Snap to Fractions:** If fractions are visible, the Start/End values will automatically snap to the nearest fraction when you finish editing.
 
 #### 4. Calculate Concentration
-
--   After integrating a peak, click the **🧪 Calculate Concentration** button.
--   A modal will appear with your integration results.
--   Enter your protein's Molar Extinction Coefficient, the flow cell Path Length (defaults to 0.2 cm for a standard 2 mm cell), and the Molecular Weight.
--   The final amount in milligrams is calculated in real-time.
+The **Amount (mg)** is calculated automatically in the analysis panel. To adjust parameters:
+-   Click the **🧪 Calculate Concentration** button.
+-   Enter your protein's Molar Extinction Coefficient, Path Length, and Molecular Weight.
+-   The amount will update in real-time on both the modal and the main analysis panel.
 
 ![Concentration Calculator](https://github.com/user-attachments/assets/6d7e6402-3691-4c52-9440-d29e9f49dca7)
 
-#### 5. Export Your Results
+#### 5. Fine-Tune Appearance & Export
+-   **Customize Fonts:** Click **⚙️ Font Settings** in the **💾 Export & Actions** panel to open the font editor. Change the font family and sizes for a professional, publication-ready look.
+-   **Save or Copy:** Use the `Save as PNG` button to choose a resolution and download the image, or `Copy to Clipboard` to capture the plot exactly as you see it.
 
-Use the buttons in the **💾 Export & Actions** panel to save your work.
+<!-- Optional: You can take a screenshot of your font settings modal and add it here -->
+<!-- ![Font Settings Modal](URL_to_your_new_screenshot.png) -->
+
 
 ## 🛠️ Built With
 
