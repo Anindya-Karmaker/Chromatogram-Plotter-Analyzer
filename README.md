@@ -2,7 +2,8 @@
 
 A powerful, browser-based tool for visualizing, analyzing, and exporting chromatography data directly from ÄKTA-generated files or custom CSV/Excel sheets. No installation required.
 
-![Sample Chromatogram Analysis](https://github.com/user-attachments/assets/f734d6d6-b47c-499f-b877-4f28f520cff2)
+<img width="1471" height="834" alt="image" src="https://github.com/user-attachments/assets/d34a3d03-7b85-408f-a9e0-88edb459abaa" />
+
 
 ## 🧬 Overview
 
@@ -53,6 +54,9 @@ Use the **📊 Plot Selection & Styling** panel to select variables and customiz
 -   **Enter Column Parameters:** Input your column's length in millimeters.
 -   **Integrate a Peak:** In the **📐 Integration & Analysis** panel, select your primary variable (usually `UV`) and use the `Start` and `End` fields to define the peak boundaries. The `Area`, `Volume`, `Asymmetry`, and `HETP` are calculated and displayed automatically.
 -   **Snap to Fractions:** If fractions are visible, the Start/End values will automatically snap to the nearest fraction when you finish editing.
+  
+<img width="320" height="419" alt="image" src="https://github.com/user-attachments/assets/8578f07b-cf23-43c2-b371-dc6bef645c16" />
+
 
 #### 4. Calculate Concentration
 The **Amount (mg)** is calculated automatically in the analysis panel. To adjust parameters:
@@ -60,14 +64,17 @@ The **Amount (mg)** is calculated automatically in the analysis panel. To adjust
 -   Enter your protein's Molar Extinction Coefficient, Path Length, and Molecular Weight.
 -   The amount will update in real-time on both the modal and the main analysis panel.
 
-![Concentration Calculator](https://github.com/user-attachments/assets/6d7e6402-3691-4c52-9440-d29e9f49dca7)
+<img width="798" height="662" alt="image" src="https://github.com/user-attachments/assets/50b66df9-57f3-49c5-8d80-3408d77dadf6" />
+
+
+
 
 #### 5. Fine-Tune Appearance & Export
 -   **Customize Fonts:** Click **⚙️ Font Settings** in the **💾 Export & Actions** panel to open the font editor. Change the font family and sizes for a professional, publication-ready look.
 -   **Save or Copy:** Use the `Save as PNG` button to choose a resolution and download the image, or `Copy to Clipboard` to capture the plot exactly as you see it.
 
-<!-- Optional: You can take a screenshot of your font settings modal and add it here -->
-<!-- ![Font Settings Modal](URL_to_your_new_screenshot.png) -->
+<img width="603" height="524" alt="image" src="https://github.com/user-attachments/assets/fee5cfee-3631-4c05-8539-5facdbb50015" />
+
 
 
 ## 🛠️ Built With
@@ -79,4 +86,4 @@ The **Amount (mg)** is calculated automatically in the analysis panel. To adjust
 
 ## 📄 License
 
-All rights reserved. Unauthorized copy or distribution of this application is strictly prohibited. For inquiries, please contact the repository owner.
+All rights reserved. Unauthorized copy or distribution of this application is strictly prohibited. For inquiries, please contact the [McDonald-Nandi Lab](https://mcdonald-nandi.ech.ucdavis.edu/).
