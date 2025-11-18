@@ -16,7 +16,7 @@
 
         body {
             font-family: Arial, sans-serif;
-            background: #f8f9fa; /* Light grey background like the other tool */
+            background: #f8f9fa; 
             padding: 20px;
         }
 
@@ -379,7 +379,7 @@
 </head>
 <body>
     <div class="container">
-        <h1><img src="logo.png" alt="Logo" style="height: 28px; vertical-align: middle; margin-right: 10px;"> Advanced Chromatogram Analyzer V1.5</h1>
+        <h1><img src="logo.png" alt="Logo" style="height: 28px; vertical-align: middle; margin-right: 10px;"> Advanced Chromatogram Analyzer V2.0</h1>
         
         <div class="main-grid">
             <div>
@@ -404,6 +404,16 @@
                     <button onclick="openCustomImport()">
                         ⚙️ Custom Import (CSV/Excel)
                     </button>
+                    <hr style="margin: 15px 0;">
+                    <button onclick="saveSession()" id="saveSessionBtn" class="button-success" disabled>
+                        💾 Save Session
+                    </button>
+                    <div class="file-input-wrapper">
+                        <button onclick="document.getElementById('loadSessionInput').click()" class="button-success">
+                            📂 Load Session
+                        </button>
+                        <input type="file" id="loadSessionInput" accept=".json" onchange="loadSession(event)" style="display: none;">
+                    </div>
                 </div>
 
                 <div class="control-group">
@@ -414,6 +424,17 @@
                     <button onclick="plotGraph()" id="plotBtn" disabled>
                         📊 Update Plot
                     </button>
+                    <hr style="margin: 15px 0;">
+                    <div class="range-control" style="gap: 5px;">
+                        <div class="range-item">
+                            <label for="xAxisStart" style="min-width: 80px;">X-axis Start:</label>
+                            <input type="number" id="xAxisStart" step="1" disabled onchange="plotGraph()">
+                        </div>
+                        <div class="range-item">
+                            <label for="xAxisEnd" style="min-width: 80px;">X-axis End:</label>
+                            <input type="number" id="xAxisEnd" step="1" disabled onchange="plotGraph()">
+                        </div>
+                    </div>
                 </div>
 
                 <div class="control-group">
@@ -482,12 +503,25 @@
                 </div>
 
                 <div class="control-group">
+                    <h3>🎨 Label Regions</h3>
+                    <button onclick="openRegionManager()" id="regionBtn" disabled>
+                        📋 Manage Regions
+                    </button>
+                    <div style="margin-top: 10px;">
+                        <label style="font-size: 13px;">
+                            <input type="checkbox" id="showRegionsCheck" disabled onchange="plotGraph()" checked>
+                            Show Regions on Plot
+                        </label>
+                    </div>
+                </div>
+
+                <div class="control-group">
                     <h3>💾 Export & Actions</h3>
                     <button onclick="openSaveImageModal()" id="saveBtn" disabled>
                         💾 Save as PNG
                     </button>
                     <button onclick="openFontSettings()" id="fontBtn" disabled class="button-secondary">
-                        ⚙️ Font Settings
+                        ⚙️ Font and Style Settings
                     </button>
                     <button onclick="copyToClipboard()" id="copyBtn" disabled class="button-secondary">
                         📋 Copy to Clipboard
@@ -611,6 +645,36 @@
             </div>
         </div>
     </div>
+
+    <div id="regionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Region Manager</h2>
+                <span class="close" onclick="closeModal('regionModal')">&times;</span>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 10px;">Add New Region</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 2fr 80px auto; gap: 10px; align-items: end;">
+                    <input type="number" id="newRegionStart" placeholder="Start (mL)" step="0.1">
+                    <input type="number" id="newRegionEnd" placeholder="End (mL)" step="0.1">
+                    <input type="text" id="newRegionLabel" placeholder="Label (e.g., Wash)">
+                    <input type="color" id="newRegionColor" class="form-control" value="#cccccc" title="Choose region color">
+                    <button onclick="addRegion()" class="button-success">Add</button>
+                </div>
+            </div>
+            
+            <h3 style="margin-bottom: 10px;">Existing Regions</h3>
+            <div id="regionList" style="max-height: 300px; overflow-y: auto;">
+                <p style="color: #999;">No regions defined</p>
+            </div>
+            
+            <div class="button-group" style="margin-top: 20px;">
+                <button onclick="saveRegions()" class="button-success">Save & Close</button>
+            </div>
+        </div>
+    </div>
+
     <div id="saveImageModal" class="modal">
         <div class="modal-content" style="max-width: 400px;">
             <div class="modal-header">
@@ -635,6 +699,10 @@
                 <span class="close" onclick="closeModal('fontSettingsModal')">&times;</span>
             </div>
             <div class="form-group">
+                <label>Chart Title:</label>
+                <input type="text" id="chartTitleInput" class="form-control">
+            </div>
+            <div class="form-group">
                 <label>Global Font Family:</label>
                 <select id="fontFamilySelect" class="form-select">
                     <option value="Arial, sans-serif">Arial</option>
@@ -642,7 +710,7 @@
                     <option value="'Courier New', Courier, monospace">Courier New</option>
                     <option value="Verdana, sans-serif">Verdana</option>
                 </select>
-            </div>
+            </div>            
             <hr>
             <div class="row g-3">
                 <div class="col-md-6 form-group">
@@ -671,14 +739,12 @@
         </div>
     </div>
 
-    <!-- --- START: New Footer HTML --- -->
     <footer>
         <p>
             <strong>Developed by:</strong> Anindya Karmaker, PhD Candidate, McDonald-Nandi Lab.
         </p>
         <p>
             <strong>Source Code:</strong> 
-            <!-- IMPORTANT: Please update this link to point to your actual GitHub repository -->
             <a href="https://github.com/Anindya-Karmaker/Chromatogram-Plotter-Analyzer" target="_blank" rel="noopener noreferrer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: text-bottom; margin-right: 4px;">
                     <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
@@ -699,12 +765,11 @@
             <strong>Disclaimer:</strong> This tool is for research and planning purposes only. The user is solely responsible for verifying all calculations and results before use.
         </p>
     </footer>
-    <!-- --- END: New Footer HTML --- -->
 
 
     <script>
-        // Global state
         let rawData = {};
+        let originalRawData = {};
         let currentFileName = '';
         let fullDataRange = { min: 0, max: 100 };
         let selectedVariables = [];
@@ -717,7 +782,8 @@
         let isRelayouting = false;
         let concentrationParams = { extCoeff: 1.0, pathLength: 0.2, mw: 1000 };
         let columnParams = { length_mm: 20 };
-        let fontSettings = { family: 'Arial, sans-serif', titleSize: 18, axisSize: 14, fractionSize: 10 };
+        let fontSettings = { chartTitle: 'Chromatogram Analysis', family: 'Arial, sans-serif', titleSize: 18, axisSize: 14, fractionSize: 10 };
+        let regionData = [];
         
         const defaultColors = ['#0066CC', '#00CC66', '#CC0000', '#CC00CC', '#00CCCC', '#FF9900', '#666666', '#FF00FF'];
         const dashStyles = {
@@ -727,7 +793,6 @@
             'dashdot': 'dashdot'
         };
 
-        // File input handler for ÄKTA files
         document.getElementById('fileInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -749,8 +814,113 @@
 
         document.getElementById('colLength').addEventListener('change', function() {
             columnParams.length_mm = parseFloat(this.value);
-            updateIntegration(); // Recalculate everything when column length changes
+            updateIntegration(); 
         });
+
+        function saveSession() {
+            if (!originalRawData || Object.keys(originalRawData).length === 0) {
+                alert("No data loaded to save.");
+                return;
+            }
+
+            const plotCheckboxesState = [];
+            document.querySelectorAll('#plotCheckboxes .checkbox-item input[type="checkbox"]').forEach(cb => {
+                plotCheckboxesState.push({
+                    name: cb.value,
+                    checked: cb.checked
+                });
+            });
+
+            const sessionData = {
+                version: '1.5',
+                fileName: currentFileName,
+                originalRawData: originalRawData,
+                fontSettings: fontSettings,
+                columnParams: columnParams,
+                concentrationParams: concentrationParams,
+                fractionData: fractionData,
+                regionData: regionData,
+                uiState: {
+                    plotCheckboxes: plotCheckboxesState,
+                    plotLabels: plotLabels,
+                    plotColors: plotColors,
+                    plotStyles: plotStyles,
+                    primaryVar: document.getElementById('primaryVarSelect').value,
+                    integStart: document.getElementById('integStartValue').value,
+                    integEnd: document.getElementById('integEndValue').value,
+                    xAxisStart: document.getElementById('xAxisStart').value,
+                    xAxisEnd: document.getElementById('xAxisEnd').value,
+                    showFractions: document.getElementById('showFractionsCheck').checked,
+                    showRegions: document.getElementById('showRegionsCheck').checked,
+                    showIntegrationLines: document.getElementById('showIntegrationLinesCheck').checked
+                }
+            };
+
+            const jsonString = JSON.stringify(sessionData, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const link = document.createElement('a');
+            const date = new Date().toISOString().slice(0, 10);
+            link.download = `${currentFileName.replace(/\.[^/.]+$/, '')}_session_${date}.json`;
+            link.href = URL.createObjectURL(blob);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function loadSession(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const sessionData = JSON.parse(e.target.result);
+
+                    if (!sessionData.originalRawData || !sessionData.uiState) {
+                        throw new Error("Invalid session file format.");
+                    }
+
+                    currentFileName = sessionData.fileName;
+                    originalRawData = sessionData.originalRawData;
+                    rawData = JSON.parse(JSON.stringify(originalRawData)); 
+                    fontSettings = sessionData.fontSettings;
+                    columnParams = sessionData.columnParams;
+                    concentrationParams = sessionData.concentrationParams;
+                    fractionData = sessionData.fractionData;
+                    regionData = sessionData.regionData;
+                    
+                    onDataImported();
+
+                    document.getElementById('colLength').value = columnParams.length_mm;
+                    document.getElementById('primaryVarSelect').value = sessionData.uiState.primaryVar;
+                    document.getElementById('integStartValue').value = sessionData.uiState.integStart;
+                    document.getElementById('integEndValue').value = sessionData.uiState.integEnd;
+                    document.getElementById('xAxisStart').value = sessionData.uiState.xAxisStart;
+                    document.getElementById('xAxisEnd').value = sessionData.uiState.xAxisEnd;
+                    document.getElementById('showFractionsCheck').checked = sessionData.uiState.showFractions;
+                    document.getElementById('showRegionsCheck').checked = sessionData.uiState.showRegions;
+                    document.getElementById('showIntegrationLinesCheck').checked = sessionData.uiState.showIntegrationLines;
+
+                    sessionData.uiState.plotCheckboxes.forEach(state => {
+                        const checkbox = document.getElementById(`check_${state.name}`);
+                        if (checkbox) checkbox.checked = state.checked;
+                    });
+                    plotLabels = sessionData.uiState.plotLabels;
+                    plotColors = sessionData.uiState.plotColors;
+                    plotStyles = sessionData.uiState.plotStyles;
+
+                    plotGraph();
+                    updateStatus(`Session loaded: ${currentFileName}`);
+
+                } catch (error) {
+                    console.error("Error loading session:", error);
+                    alert("Failed to load session file. It may be corrupt or in an invalid format.");
+                } finally {
+                    event.target.value = '';
+                }
+            };
+            reader.readAsText(file);
+        }
 
         function processAktaFile(data) {
             try {
@@ -758,74 +928,49 @@
                     updateStatus('Error: File has too few rows');
                     return;
                 }
-
                 const headers = data[1] || [];
                 const dataRows = data.slice(2);
                 
-                rawData = {};
-                
+                originalRawData = {}; 
                 const columnMap = [
-                    { pattern: 'UV', name: 'UV' },
-                    { pattern: 'ph', name: 'pH', caseSensitive: false },
-                    { pattern: 'Cond', name: 'Conductivity' },
-                    { pattern: 'Conc', name: 'Gradient' },
-                    { pattern: 'flow', name: 'Flow rate', caseSensitive: false },
-                    { pattern: 'pressure', name: 'System Pressure', caseSensitive: false },
+                    { pattern: 'UV', name: 'UV' }, { pattern: 'ph', name: 'pH', caseSensitive: false },
+                    { pattern: 'Cond', name: 'Conductivity' }, { pattern: 'Conc', name: 'Gradient' },
+                    { pattern: 'flow', name: 'Flow rate', caseSensitive: false }, { pattern: 'pressure', name: 'System Pressure', caseSensitive: false },
                     { pattern: 'Fraction', name: 'Fraction' }
                 ];
                 
                 columnMap.forEach(function(mapping) {
-                    const idx = headers.findIndex(function(h) {
-                        if (!h) return false;
-                        const header = mapping.caseSensitive === false ? h.toLowerCase() : h;
-                        const pattern = mapping.caseSensitive === false ? mapping.pattern.toLowerCase() : mapping.pattern;
-                        return header.includes(pattern);
-                    });
+                    const idx = headers.findIndex(h => h && (mapping.caseSensitive === false ? h.toLowerCase() : h).includes(mapping.caseSensitive === false ? mapping.pattern.toLowerCase() : mapping.pattern));
                     
                     if (idx >= 0) {
-                        const varName = mapping.name;
-                        
-                        if (varName === 'Fraction') {
-                            // Process fractions
+                        if (mapping.name === 'Fraction') {
                             fractionData = [];
-                            dataRows.forEach(function(row) {
-                                if (row[idx] && row[idx + 1]) {
-                                    const pos = parseFloat(row[idx]);
-                                    const label = row[idx + 1];
-                                    if (!isNaN(pos)) {
-                                        fractionData.push({ position: pos, label: label, show: true });
-                                    }
-                                }
+                            dataRows.forEach(row => {
+                                const pos = parseFloat(row[idx]);
+                                if (!isNaN(pos) && row[idx + 1]) fractionData.push({ position: pos, label: row[idx + 1], show: true });
                             });
                         } else {
-                            // Process numerical data
-                            rawData[varName] = { x: [], y: [] };
-                            dataRows.forEach(function(row) {
-                                if (row[idx] && row[idx + 1]) {
-                                    const x = parseFloat(row[idx]);
-                                    const y = parseFloat(row[idx + 1]);
-                                    if (!isNaN(x) && !isNaN(y) && y >= 0) {
-                                        rawData[varName].x.push(x);
-                                        rawData[varName].y.push(y);
-                                    }
-                                }
+                            originalRawData[mapping.name] = { x: [], y: [] };
+                            dataRows.forEach(row => {
+                                const x = parseFloat(row[idx]);
+                                const y = parseFloat(row[idx+1]);
+                                if (!isNaN(x)) originalRawData[mapping.name].x.push(x);
+                                if (!isNaN(x) && !isNaN(y)) originalRawData[mapping.name].y.push(y);
                             });
                         }
                     }
                 });
                 
-                // Remove empty datasets
-                Object.keys(rawData).forEach(function(key) {
-                    if (rawData[key].x.length === 0) {
-                        delete rawData[key];
-                    }
+                Object.keys(originalRawData).forEach(key => {
+                    if (originalRawData[key].x.length === 0) delete originalRawData[key];
                 });
                 
-                if (Object.keys(rawData).length === 0) {
+                if (Object.keys(originalRawData).length === 0) {
                     updateStatus('Error: No valid data found in file');
                     return;
                 }
                 
+                rawData = JSON.parse(JSON.stringify(originalRawData)); 
                 onDataImported();
                 
             } catch (error) {
@@ -833,17 +978,68 @@
             }
         }
 
-        function onDataImported() {
-            // Calculate full data range
-            let allX = [];
-            Object.keys(rawData).forEach(function(key) {
-                allX = allX.concat(rawData[key].x);
+        function importCustomData() {
+            if (!customParsedData) return;
+            const headerRow = parseInt(document.getElementById('headerRowInput').value);
+            const dataRows = customParsedData.slice(headerRow + 1);
+            
+            originalRawData = {}; 
+            const variables = ['UV', 'pH', 'Conductivity', 'Gradient', 'Flow rate', 'System Pressure'];
+            
+            variables.forEach(varName => {
+                const xIdx = document.getElementById(`x_${varName}`).value;
+                const yIdx = document.getElementById(`y_${varName}`).value;
+                if (xIdx !== '' && yIdx !== '') {
+                    originalRawData[varName] = { x: [], y: [] };
+                    dataRows.forEach(row => {
+                        const x = parseFloat(row[xIdx]);
+                        const y = parseFloat(row[yIdx]);
+                        if (!isNaN(x) && !isNaN(y)) {
+                            originalRawData[varName].x.push(x);
+                            originalRawData[varName].y.push(y);
+                        }
+                    });
+                    if (originalRawData[varName].x.length === 0) delete originalRawData[varName];
+                }
             });
+
+            if (Object.keys(originalRawData).length === 0) {
+                alert('No valid data could be imported. Please check your column mappings.');
+                return;
+            }
             
-            fullDataRange.min = Math.min.apply(null, allX);
-            fullDataRange.max = Math.max.apply(null, allX);
+            currentFileName = document.getElementById('customFileInput').files[0].name;
+            closeModal('customImportModal');
             
-            // Reset and initialize colors, styles, and labels
+            rawData = JSON.parse(JSON.stringify(originalRawData)); 
+            onDataImported();
+        }
+
+        function onDataImported() {
+            let globalMinX = Infinity;
+            let globalMaxX = -Infinity;
+
+            Object.keys(rawData).forEach(function(key) {
+                const x_values = rawData[key].x;
+                if (x_values && x_values.length > 0) {
+                    for (let i = 0; i < x_values.length; i++) {
+                        if (x_values[i] < globalMinX) globalMinX = x_values[i];
+                        if (x_values[i] > globalMaxX) globalMaxX = x_values[i];
+                    }
+                }
+            });
+
+            if (globalMinX === Infinity) {
+                fullDataRange.min = 0;
+                fullDataRange.max = 100;
+            } else {
+                fullDataRange.min = globalMinX;
+                fullDataRange.max = globalMaxX;
+            }
+            
+            document.getElementById('xAxisStart').value = fullDataRange.min.toFixed(2);
+            document.getElementById('xAxisEnd').value = fullDataRange.max.toFixed(2);
+
             plotLabels = {};
             Object.keys(rawData).forEach(function(varName, idx) {
                 plotLabels[varName] = varName;
@@ -855,7 +1051,6 @@
                 }
             });
             
-            // Enable controls
             document.getElementById('plotBtn').disabled = false;
             document.getElementById('primaryVarSelect').disabled = false;
             document.getElementById('integStartValue').disabled = false;
@@ -867,8 +1062,12 @@
             document.getElementById('fractionBtn').disabled = false;
             document.getElementById('showFractionsCheck').disabled = false;
             document.getElementById('showIntegrationLinesCheck').disabled = false;
+            document.getElementById('regionBtn').disabled = false;
+            document.getElementById('showRegionsCheck').disabled = false;
+            document.getElementById('xAxisStart').disabled = false;
+            document.getElementById('xAxisEnd').disabled = false;
+            document.getElementById('saveSessionBtn').disabled = false; 
             
-            // Populate checkboxes with style controls
             const container = document.getElementById('plotCheckboxes');
             container.innerHTML = '';
             
@@ -933,7 +1132,6 @@
                 container.appendChild(wrapper);
             });
             
-            // Populate primary variable selector
             const select = document.getElementById('primaryVarSelect');
             select.innerHTML = '<option value="">Select variable...</option>';
             Object.keys(rawData).forEach(function(varName) {
@@ -957,15 +1155,17 @@
         }
 
         function openFontSettings() {
+            document.getElementById('chartTitleInput').value = fontSettings.chartTitle; 
             document.getElementById('fontFamilySelect').value = fontSettings.family;
             document.getElementById('titleFontSize').value = fontSettings.titleSize;
             document.getElementById('axisFontSize').value = fontSettings.axisSize;
             document.getElementById('fractionFontSize').value = fontSettings.fractionSize;
-            document.getElementById('globalFontSize').value = ''; // Clear global on open
+            document.getElementById('globalFontSize').value = ''; 
             document.getElementById('fontSettingsModal').style.display = 'block';
         }
 
         function applyFontSettings() {
+            fontSettings.chartTitle = document.getElementById('chartTitleInput').value; 
             fontSettings.family = document.getElementById('fontFamilySelect').value;
             fontSettings.titleSize = parseInt(document.getElementById('titleFontSize').value);
             fontSettings.axisSize = parseInt(document.getElementById('axisFontSize').value);
@@ -980,6 +1180,112 @@
             document.getElementById('titleFontSize').value = newSize + 4;
             document.getElementById('axisFontSize').value = newSize;
             document.getElementById('fractionFontSize').value = newSize - 2 > 6 ? newSize - 2 : 6;
+        }
+
+        function openRegionManager() {
+            renderRegionList();
+            document.getElementById('regionModal').style.display = 'block';
+        }
+
+        function renderRegionList() {
+            const container = document.getElementById('regionList');
+            if (regionData.length === 0) {
+                container.innerHTML = '<p style="color: #999;">No regions defined</p>';
+                return;
+            }
+            container.innerHTML = '';
+            regionData.sort((a, b) => a.start - b.start);
+            
+            regionData.forEach((region, idx) => {
+                const div = document.createElement('div');
+                div.className = 'fraction-item'; 
+
+                div.innerHTML = `
+                    <!-- View State -->
+                    <div id="view-region-${idx}" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 20px; height: 20px; background-color: ${region.color}; border: 1px solid #ccc; flex-shrink: 0;"></div>
+                            <div><strong>${region.label}</strong> (${region.start.toFixed(2)} - ${region.end.toFixed(2)} mL)</div>
+                        </div>
+                        <div class="button-group" style="flex-shrink: 0;">
+                            <button class="button-secondary" style="width: auto; padding: 5px 10px;" onclick="toggleRegionEdit(${idx})">Edit</button>
+                            <button class="button-danger" style="width: auto; padding: 5px 10px;" onclick="deleteRegion(${idx})">Delete</button>
+                        </div>
+                    </div>
+
+                    <!-- Edit State (hidden by default) -->
+                    <div id="edit-region-${idx}" style="display: none; width: 100%; gap: 10px;">
+                        <input type="number" class="form-control" value="${region.start.toFixed(2)}" step="0.1" style="width: 90px;">
+                        <input type="number" class="form-control" value="${region.end.toFixed(2)}" step="0.1" style="width: 90px;">
+                        <input type="text" class="form-control" value="${region.label}">
+                        <input type="color" class="form-control" value="${region.color}" style="min-width: 50px; padding: 2px;">
+                        <button class="button-success" style="width: auto; padding: 5px 10px;" onclick="saveRegionEdit(${idx})">Save</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleRegionEdit(index) {
+            const viewDiv = document.getElementById(`view-region-${index}`);
+            const editDiv = document.getElementById(`edit-region-${index}`);
+            if (viewDiv.style.display !== 'none') {
+                viewDiv.style.display = 'none';
+                editDiv.style.display = 'flex';
+            } else {
+                viewDiv.style.display = 'flex';
+                editDiv.style.display = 'none';
+            }
+        }
+
+        function saveRegionEdit(index) {
+            const editDiv = document.getElementById(`edit-region-${index}`);
+            const inputs = editDiv.querySelectorAll('input');
+            
+            const start = parseFloat(inputs[0].value);
+            const end = parseFloat(inputs[1].value);
+            const label = inputs[2].value.trim();
+            const color = inputs[3].value;
+
+            if (isNaN(start) || isNaN(end) || !label || end <= start) {
+                alert('Please enter a valid Start, End, and Label. End value must be greater than Start.');
+                return;
+            }
+
+            regionData[index] = { start, end, label, color };
+            
+            renderRegionList();
+        }
+
+        function addRegion() {
+            const start = parseFloat(document.getElementById('newRegionStart').value);
+            const end = parseFloat(document.getElementById('newRegionEnd').value);
+            const label = document.getElementById('newRegionLabel').value.trim();
+            const color = document.getElementById('newRegionColor').value;
+
+            if (isNaN(start) || isNaN(end) || !label || end <= start) {
+                alert('Please enter a valid Start, End, and Label. End value must be greater than Start.');
+                return;
+            }
+
+            regionData.push({ start, end, label, color });
+            document.getElementById('newRegionStart').value = '';
+            document.getElementById('newRegionEnd').value = '';
+            document.getElementById('newRegionLabel').value = '';
+            renderRegionList();
+        }
+        
+        function deleteRegion(index) {
+            regionData.splice(index, 1);
+            renderRegionList();
+        }
+
+        function saveRegions() {
+            closeModal('regionModal');
+            if (document.getElementById('showRegionsCheck').checked) {
+                plotGraph();
+            }
+            updateStatus('Regions saved: ' + regionData.length + ' region(s)');
         }
 
         function setupIntegrationInputs() {
@@ -1001,11 +1307,16 @@
         }
 
         function handleRelayout(eventData) {
-            if (isRelayouting) return; // Prevent infinite loops
+            if (isRelayouting) return;
 
             const xrange = eventData['xaxis.range[0]'] ? [eventData['xaxis.range[0]'], eventData['xaxis.range[1]']] : null;
             
-            if (!xrange) return; // Not an x-axis zoom/pan event, so do nothing.
+            if (xrange) {
+                document.getElementById('xAxisStart').value = xrange[0].toFixed(2);
+                document.getElementById('xAxisEnd').value = xrange[1].toFixed(2);
+            }
+
+            if (!xrange) return;
 
             isRelayouting = true; 
 
@@ -1067,7 +1378,9 @@
             selectedVariables.forEach(function(varName, idx) {
                 const data = rawData[varName];
                 traces.push({
-                    x: data.x, y: data.y, name: plotLabels[varName] || varName, type: 'scatter', mode: 'lines',
+                    x: data.x, 
+                    y: data.y, 
+                    name: plotLabels[varName] || varName, type: 'scatter', mode: 'lines',
                     line: { color: plotColors[varName], dash: dashStyles[plotStyles[varName]], width: 2 },
                     yaxis: idx === 0 ? 'y' : 'y' + (idx + 1)
                 });
@@ -1104,30 +1417,54 @@
                         });
                         annotations.push({
                             x: fraction.position, y: 0, xref: 'x', yref: 'paper', text: fraction.label,
-                            showarrow: false, 
-                            // --- Apply font settings to fractions ---
-                            font: { size: fontSettings.fractionSize, color: '#444' },
+                            showarrow: false, font: { size: fontSettings.fractionSize, color: '#444' },
                             yanchor: 'top', yshift: -5, xanchor: 'center', textangle: -45
                         });
                     }
                 });
             }
+
+            if (document.getElementById('showRegionsCheck').checked && regionData.length > 0) {
+                regionData.forEach(region => {
+                    shapes.push({
+                        type: 'rect', xref: 'x', yref: 'paper', x0: region.start, y0: 0, x1: region.end, y1: 1,
+                        fillcolor: region.color, opacity: 0.2, line: { width: 0 }, layer: 'below'
+                    });
+                    annotations.push({
+                        x: (region.start + region.end) / 2, y: 1.05, xref: 'x', yref: 'paper',
+                        text: `<b>${region.label}</b>`, showarrow: false,
+                        font: { size: fontSettings.axisSize, color: 'black' }, xanchor: 'center'
+                    });
+                    traces.push({
+                        x: [null], y: [null], type: 'scatter', mode: 'markers', name: region.label,
+                        marker: { symbol: 'square', color: region.color, size: 15, line: { width: 1, color: '#666' } },
+                        showlegend: true
+                    });
+                });
+            }
             
+            const xAxisStart = parseFloat(document.getElementById('xAxisStart').value);
+            const xAxisEnd = parseFloat(document.getElementById('xAxisEnd').value);
+            let xAxisRange = null;
+            if (!isNaN(xAxisStart) && !isNaN(xAxisEnd) && xAxisStart < xAxisEnd) {
+                xAxisRange = [xAxisStart, xAxisEnd];
+            }
+
             const layout = {
-                // --- Apply font settings to layout ---
                 font: { family: fontSettings.family },
                 title: { 
-                    text: 'Chromatogram Analysis',
+                    text: fontSettings.chartTitle,
                     font: { size: fontSettings.titleSize }
                 },
                 margin: { t: 50, b: 150 },
                 legend: {
-                    orientation: 'h', yanchor: 'top', y: -0.25, xanchor: 'center', x: 0.5
+                    orientation: 'h', yanchor: 'top', y: -0.3, xanchor: 'center', x: 0.5
                 },
                 xaxis: {
                     title: 'Volume (mL)', domain: [0, plotDomainEnd], automargin: true,
                     titlefont: { size: fontSettings.axisSize },
-                    tickfont: { size: fontSettings.axisSize }
+                    tickfont: { size: fontSettings.axisSize },
+                    range: xAxisRange
                 },
                 annotations: annotations,
                 shapes: shapes,
@@ -1139,11 +1476,11 @@
                 const axisId = idx === 0 ? 'yaxis' : 'yaxis' + (idx + 1);
                 layout[axisId] = {
                     title: plotLabels[varName] || varName,
-                    // --- Apply font settings to axes ---
                     titlefont: { color: plotColors[varName], size: fontSettings.axisSize },
                     tickfont: { color: plotColors[varName], size: fontSettings.axisSize },
                     automargin: true
                 };
+
                 
                 if (idx > 0) {
                     layout[axisId].overlaying = 'y';
@@ -1174,7 +1511,6 @@
         }
 
         function snapToFraction(inputId) {
-            // Exit if snapping isn't active or there are no fractions
             if (!document.getElementById('showFractionsCheck').checked || fractionData.length === 0) {
                 return;
             }
@@ -1186,9 +1522,8 @@
             let closestPosition = null;
             let minDifference = Infinity;
 
-            // Find the closest visible fraction
             fractionData.forEach(fraction => {
-                if (fraction.show) { // Only snap to fractions that are currently visible on the plot
+                if (fraction.show) { 
                     const difference = Math.abs(fraction.position - inputValue);
                     if (difference < minDifference) {
                         minDifference = difference;
@@ -1197,7 +1532,7 @@
                 }
             });
 
-            // If a closest fraction was found, update the input field's value
+            
             if (closestPosition !== null) {
                 inputElement.value = closestPosition.toFixed(2);
             }
@@ -1211,7 +1546,6 @@
             const asymmetryEl = document.getElementById('integAsymmetryVal');
             const hetpEl = document.getElementById('integHETPVal');
 
-            // Reset all display values
             const resetDisplay = () => {
                 integrationResults = { area: 0, volume: 0, start: 0, end: 0 };
                 areaEl.textContent = '-';
@@ -1245,7 +1579,6 @@
                     volumeEl.textContent = volume.toFixed(2) + ' mL';
                     rangeEl.textContent = startVal.toFixed(2) + ' - ' + endVal.toFixed(2) + ' mL';
 
-                    // Calculate and display HETP and Asymmetry
                     const metrics = calculatePeakMetrics(filtered);
                     asymmetryEl.textContent = metrics.asymmetry.toFixed(2);
                     hetpEl.textContent = metrics.hetp > 0 ? metrics.hetp.toFixed(2) + ' µm' : 'N/A';
@@ -1262,14 +1595,12 @@
             const defaults = { asymmetry: 0, hetp: 0 };
             if (peakData.length < 3) return defaults;
 
-            // Find peak maximum
             let peakMax = { x: 0, y: -Infinity, index: -1 };
             peakData.forEach((p, i) => {
                 if (p.y > peakMax.y) peakMax = { x: p.x, y: p.y, index: i };
             });
             if (peakMax.index === -1) return defaults;
 
-            // Establish baseline (linear between start and end of peakData)
             const startPoint = peakData[0];
             const endPoint = peakData[peakData.length - 1];
             const baselineSlope = (endPoint.y - startPoint.y) / (endPoint.x - startPoint.x);
@@ -1278,7 +1609,6 @@
             const peakHeight = peakMax.y - getBaselineY(peakMax.x);
             if (peakHeight <= 0) return defaults;
 
-            // Helper function for linear interpolation to find X for a given Y
             const interpolateX = (yTarget, startIndex, direction) => {
                 for (let i = startIndex; i >= 0 && i < peakData.length - 1; i += direction) {
                     const p1 = peakData[i];
@@ -1297,7 +1627,6 @@
                 return null;
             };
 
-            // Calculate widths for Asymmetry (10%) and HETP (50%)
             const x_10_leading = interpolateX(peakHeight * 0.10, peakMax.index, -1);
             const x_10_trailing = interpolateX(peakHeight * 0.10, peakMax.index, 1);
             const x_50_leading = interpolateX(peakHeight * 0.50, peakMax.index, -1);
@@ -1334,7 +1663,7 @@
                 format: 'png',
                 width: width,
                 height: height,
-                scale: scale, // Apply the scaling factor
+                scale: scale, 
                 filename: currentFileName.replace(/\.[^/.]+$/, '') + '_chromatogram'
             });
             closeModal('saveImageModal');
@@ -1342,14 +1671,13 @@
 
         function copyToClipboard() {
             const chartDiv = document.getElementById('plotlyChart');
-            // --- KEY CHANGE: Get the current on-screen dimensions of the plot ---
             const width = chartDiv.clientWidth;
             const height = chartDiv.clientHeight;
 
             Plotly.toImage('plotlyChart', { 
                 format: 'png', 
-                width: width, // Use the current on-screen width
-                height: height // Use the current on-screen height
+                width: width, 
+                height: height 
             })
                 .then(dataUrl => fetch(dataUrl))
                 .then(res => res.blob())
@@ -1431,39 +1759,7 @@
             document.getElementById('importCustomBtn').disabled = false;
         }
 
-        function importCustomData() {
-            if (!customParsedData) return;
-            const headerRow = parseInt(document.getElementById('headerRowInput').value);
-            const dataRows = customParsedData.slice(headerRow + 1);
-            rawData = {};
-            const variables = ['UV', 'pH', 'Conductivity', 'Gradient', 'Flow rate', 'System Pressure'];
-            variables.forEach(varName => {
-                const xIdx = document.getElementById(`x_${varName}`).value;
-                const yIdx = document.getElementById(`y_${varName}`).value;
-                if (xIdx !== '' && yIdx !== '') {
-                    rawData[varName] = { x: [], y: [] };
-                    dataRows.forEach(row => {
-                        const x = parseFloat(row[xIdx]);
-                        const y = parseFloat(row[yIdx]);
-                        if (!isNaN(x) && !isNaN(y)) {
-                            rawData[varName].x.push(x);
-                            rawData[varName].y.push(y);
-                        }
-                    });
-                    if (rawData[varName].x.length === 0) delete rawData[varName];
-                }
-            });
-            if (Object.keys(rawData).length === 0) {
-                alert('No valid data could be imported. Please check your column mappings.');
-                return;
-            }
-            currentFileName = document.getElementById('customFileInput').files[0].name;
-            closeModal('customImportModal');
-            onDataImported();
-        }
-
         function openConcentrationCalculator() {
-            // Populate modal inputs from our global state
             document.getElementById('extCoeffInput').value = concentrationParams.extCoeff;
             document.getElementById('pathLengthInput').value = concentrationParams.pathLength;
             document.getElementById('molecularWeightInput').value = concentrationParams.mw;
@@ -1475,16 +1771,15 @@
                 '<div><strong>Peak Volume:</strong> ' + integrationResults.volume.toFixed(2) + ' mL</div>';
             
             document.getElementById('concentrationModal').style.display = 'block';
-            calculateConcentration(); // Run once to ensure modal display is correct on open
+            calculateConcentration(); 
         }
 
         function calculateConcentration() {
-            // Update the global state from the modal's input fields
             concentrationParams.extCoeff = parseFloat(document.getElementById('extCoeffInput').value);
             concentrationParams.pathLength = parseFloat(document.getElementById('pathLengthInput').value);
             concentrationParams.mw = parseFloat(document.getElementById('molecularWeightInput').value);
             
-            updateConcentrationDisplay(); // Call the central display update function
+            updateConcentrationDisplay(); 
         }
 
         function openFractionManager() {
@@ -1604,13 +1899,13 @@
         document.getElementById('primaryVarSelect').addEventListener('change', setupIntegrationInputs);
 
         document.getElementById('integStartValue').addEventListener('change', function() {
-            snapToFraction('integStartValue'); // Snap this input first
+            snapToFraction('integStartValue'); 
             updateIntegration();
             if (Object.keys(rawData).length > 0) plotGraph();
         });
 
         document.getElementById('integEndValue').addEventListener('change', function() {
-            snapToFraction('integEndValue'); // Snap this input first
+            snapToFraction('integEndValue'); 
             updateIntegration();
             if (Object.keys(rawData).length > 0) plotGraph();
         });
