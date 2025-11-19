@@ -2,7 +2,8 @@
 
 A powerful, browser-based tool for visualizing, analyzing, and exporting chromatography data directly from ÄKTA-generated files or custom CSV/Excel sheets. No installation required.
 
-![Sample Chromatogram Analysis](https://github.com/user-attachments/assets/b2c4ccd6-999d-495c-96fe-fad4329c9834)
+<img width="1597" height="914" alt="image" src="https://github.com/user-attachments/assets/4f96b32a-082e-4ea1-a2c9-098fd0ad4fb9" />
+
 
 ## 🧬 Overview
 
@@ -69,7 +70,8 @@ The **Amount (mg)** is calculated automatically. To adjust parameters, click **�
 -   **Customize Fonts:** Click **⚙️ Font and Style Settings** to open the font editor. Change the chart title, font family, and sizes for a professional, publication-ready look.
 -   **Save or Copy:** Use the `Save as PNG` button to choose a resolution and download the image, or `Copy to Clipboard` to capture the plot exactly as you see it.
 
-<img width="603" height="524" alt="image" src="https://github.com/user-attachments/assets/c295db42-fe64-4a39-b3a8-f0e2347da091" />
+<img width="596" height="828" alt="image" src="https://github.com/user-attachments/assets/2f6b32fd-3a8f-4bbc-a94b-3098ffdc902f" />
+
 
 ## 🛠️ Built With
 
