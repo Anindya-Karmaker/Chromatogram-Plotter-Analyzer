@@ -48,7 +48,8 @@ Use the **📁 Open ÄKTA File** button for standard Unicorn exports. For other 
 #### 2. Customize the Plot
 Use the **📊 Plot Selection & Styling** panel to select variables and customize their appearance. You can also set the exact X-axis range here.
 
-![Plotting Controls](https://github.com/user-attachments/assets/753c8e5c-9747-48e7-b373-7447c09fb753)
+<img width="337" height="571" alt="image" src="https://github.com/user-attachments/assets/f74d7816-a553-4c65-8d1e-f84877fcb3d4" />
+
 
 #### 3. Annotate the Chart
 -   **Manage Fractions:** Use the **🧫 Fractions** panel to add, edit, or hide fraction markers on the plot.
@@ -59,18 +60,21 @@ Use the **📊 Plot Selection & Styling** panel to select variables and customiz
 -   **Integrate a Peak:** In the **📐 Integration & Analysis** panel, select your primary variable (usually `UV`) and use the `Start` and `End` fields to define the peak boundaries. The `Area`, `Volume`, `Asymmetry`, and `HETP` are calculated and displayed automatically.
 -   **Snap to Fractions:** If fractions are visible, the Start/End values will automatically snap to the nearest fraction when you finish editing.
 
-<img width="320" height="419" alt="image" src="https://github.com/user-attachments/assets/8578f07b-cf23-43c2-b371-dc6bef645c16" />
+<img width="337" height="567" alt="image" src="https://github.com/user-attachments/assets/b9bb0780-b5f2-48a4-961e-cd151709a29d" />
+
 
 #### 5. Calculate Concentration
 The **Amount (mg)** is calculated automatically. To adjust parameters, click **🧪 Calculate Concentration**, enter your protein's specific values, and the amount will update in real-time everywhere.
 
-<img width="505" height="419" alt="image" src="https://github.com/user-attachments/assets/50b66df9-57f3-49c5-8d80-3408d77dadf6" />
+<img width="800" height="665" alt="image" src="https://github.com/user-attachments/assets/4a85e3d5-8eae-415e-a85f-24c6f83e7746" />
+
 
 #### 6. Fine-Tune Appearance & Export
 -   **Customize Fonts:** Click **⚙️ Font and Style Settings** to open the font editor. Change the chart title, font family, and sizes for a professional, publication-ready look.
 -   **Save or Copy:** Use the `Save as PNG` button to choose a resolution and download the image, or `Copy to Clipboard` to capture the plot exactly as you see it.
 
-<img width="302" height="419" alt="image" src="https://github.com/user-attachments/assets/2f6b32fd-3a8f-4bbc-a94b-3098ffdc902f" />
+<img width="599" height="832" alt="image" src="https://github.com/user-attachments/assets/6f7e3500-b7a6-4489-959a-523fbc5b14b5" />
+
 
 
 ## 🛠️ Built With
