@@ -1595,10 +1595,14 @@
 
             selectedVariables.forEach(function(varName, idx) {
                 const data = rawData[varName];
+                const traceName = plotLabels[varName] || varName; // Get the trace name
                 traces.push({
                     x: data.x, 
                     y: data.y,
-                    name: plotLabels[varName] || varName, type: 'scatter', mode: 'lines',
+                    name: traceName, 
+                    type: 'scatter', 
+                    mode: 'lines',
+                    hovertemplate: `${traceName}: %{y:.4f}<extra></extra>`,
                     line: { color: plotColors[varName], dash: dashStyles[plotStyles[varName]], width: plotWidths[varName] || 2 },
                     yaxis: idx === 0 ? 'y' : 'y' + (idx + 1)
                 });
@@ -1660,6 +1664,7 @@
                     titlefont: { size: fontSettings.axisSize }, 
                     tickfont: { size: fontSettings.axisSize }, 
                     range: xAxisRange,
+                    hoverformat: '.4f', 
                     showline: true,
                     linewidth: 1,
                     linecolor: 'black',
