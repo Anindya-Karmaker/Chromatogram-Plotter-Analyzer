@@ -37,7 +37,7 @@ This tool was created for researchers who need a fast, private, and flexible way
 
 No installation is needed!
 
-1.  **Visit the Live Tool:** [https://anindya-karmaker.github.io/Chromatogram-Plotter-Analyzer/](https://anindya-karmaker.github.io/Chromatogram-Plotter-Analyzer/)
+1.  **Visit the Live Tool:** https://anindya-karmaker.github.io/Advanced_chromatogram_analyzer/
 2.  **Or Download:** Download the `index.html` file from this repository and open it in any modern web browser (like Chrome, Firefox, or Edge).
 
 ---
