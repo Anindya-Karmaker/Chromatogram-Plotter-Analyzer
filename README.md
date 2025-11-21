@@ -18,7 +18,7 @@ This tool was created for researchers who need a fast, private, and flexible way
 -   **Save & Load Sessions:** Save your entire analysis state—including data, annotations, and all settings—into a single `.json` file. Load a session file to resume your work exactly where you left off.
 -   **Interactive Multi-Axis Plotting:**
     -   Visualize multiple variables on a single plot, each with its own y-axis.
-    -   Full control over line color, style, and custom labels.
+    -   Full control over line color, thickness, style, and custom labels.
 -   **Advanced Peak Analysis:**
     -   Visually select an integration range with draggable lines that can **snap to the nearest fraction**.
     -   Automatically calculates **Peak Area**, **Volume**, **Asymmetry Factor (As)**, and **HETP**.
