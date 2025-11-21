@@ -2,7 +2,8 @@
 
 A powerful, browser-based tool for visualizing, analyzing, and exporting chromatography data directly from ÄKTA-generated files or custom CSV/Excel sheets. No installation required.
 
-<img width="1598" height="976" alt="image" src="https://github.com/user-attachments/assets/aef3dd11-f47c-489f-995b-be0808097da0" />
+<img width="1471" height="793" alt="image" src="https://github.com/user-attachments/assets/eed13bc4-5cc9-4c74-b3ab-65c0d88bad34" />
+
 
 
 
@@ -49,7 +50,8 @@ Use the **📁 Open ÄKTA File** button for standard Unicorn exports. For other 
 #### 2. Customize the Plot
 Use the **📊 Plot Selection & Styling** panel to select variables and customize their appearance. You can also set the exact X-axis range here.
 
-<img width="337" height="571" alt="image" src="https://github.com/user-attachments/assets/f74d7816-a553-4c65-8d1e-f84877fcb3d4" />
+<img width="335" height="570" alt="image" src="https://github.com/user-attachments/assets/d791dac5-306e-4fcf-935e-f3df1bfca4fe" />
+
 
 
 #### 3. Annotate the Chart
